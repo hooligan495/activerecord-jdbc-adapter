@@ -1,6 +1,7 @@
 MSSQL_CONFIG = {
-  :username => 'blog',
-  :password => '',
+  :host     => "192.168.209.101",
+  :username => 'sa',
+  :password => 'sa',
   :adapter  => 'mssql',
   :database => 'weblog_development'
 }
