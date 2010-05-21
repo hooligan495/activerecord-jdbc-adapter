@@ -217,8 +217,14 @@ module ::JdbcSpec
           else
             #UGLY
             #KLUDGY?
+            #removing out stuff before the FROM... 
             rest = rest_of_query[/FROM/i=~ rest_of_query.. -1]
-            new_sql = "#{select} TOP #{limit + offset} #{rest_of_query} WHERE id NOT IN (#{select} TOP #{offset} id #{rest} ORDER BY id)"
+            #need the table name for avoiding amiguity
+            table_name = get_table_name(sql)
+            #I am not sure this will cover all bases.  but all the tests pass
+            new_order = "#{order}, #{table_name}.id" if order.index("#{table_name}.id").nil?
+            new_order ||= order
+            new_sql = "#{select} TOP #{limit} #{rest_of_query} WHERE #{table_name}.id NOT IN (#{select} TOP #{offset} #{table_name}.id #{rest} ORDER BY #{new_order}) ORDER BY #{order} "
             sql.replace(new_sql)
           end
         end
